@@ -1,0 +1,572 @@
+\documentclass[11pt]{beamer}
+\usetheme{Madrid}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\defbeamertemplate{description item}{align left}{\insertdescriptionitem\hfill}
+\definecolor{lightgrey}{rgb}{0.92,0.92,0.92} % defining color for listing
+\definecolor{darkgreen}{rgb}{0,0.6,0} % defining color for listing
+\definecolor{links}{HTML}{2A1B81}
+\makeatletter
+\newcommand{\srcsize}{\@setfontsize{\srcsize}{5pt}{5pt}}
+\makeatother
+
+%\setbeamercovered{transparent} 
+%\setbeamertemplate{navigation symbols}{} 
+%\logo{} 
+%\subject{}
+
+\begin{document}
+\title[Spatial Analysis Using R]
+{Spatial Analysis Using R}
+\author{Chieko Maene}
+\date {\today}
+\institute{University of Chicago}
+%\\Social Sciences Computing Services
+
+\begin{frame}
+\titlepage{}
+\end{frame}
+
+%\begin{frame}
+%\tableofcontents
+%\end{frame}
+
+\begin{frame}
+\frametitle{Who we are}
+\begin{itemize}
+  \item \href{http://gis.uchicago.edu/}{http://gis.uchicago.edu/}
+  \item Two-person GIS team at Social Sciences Division
+  \item We (not the university IT) provide GIS software licenses and services
+  \item We also offer GIS courses and workshop
+  \item We like to talk about GIS
+  \item but nobody "owns" GIS - it's for everybody!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{ArcGIS - the main GIS software we provide}
+\begin{columns}
+\begin{column}{6cm}
+\begin{itemize}
+\item NOT using this today but..
+\item The most popular desktop GIS
+\begin{itemize}
+\item Windows OS only
+\item for creating, analyzing and managing spatial data
+\end{itemize}
+\item Large installation files, complicated software
+\begin{itemize}
+\item  known to crash often
+\item  but it is the most comprehensive GIS
+\end{itemize}
+\item Available from ITS Virtual Lab (vlab.uchicago.edu)
+\end{itemize}
+\end{column}
+\begin{column}{4cm}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.3]{images/ArcGIS.png}
+\end{center}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Open Source GIS}
+\begin{columns}
+\begin{column}{6cm}
+\begin{itemize}
+\item OSGEO (Open Source Geospatial) Foundation projects
+\begin{itemize}
+\item Supports and maintains many open source spatial projects
+\item Ex. QGIS desktop 
+\begin{itemize}
+\item  Alternative to ArcGIS
+\end{itemize}
+\item Host for geospatial libraries
+\begin{itemize}
+\item  GDAL \& GEOS (core spatial libraries used by R, Python, QGIS and more)
+\end{itemize}
+\end{itemize}
+\item Other projects
+\begin{itemize}
+\item  Spatialite for SQLite
+\end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{4cm}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.3]{images/osgeo.png}
+\end{center}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{What are spatial datasets?}
+\begin{columns}
+\begin{column}{4cm}
+Two data models
+\setbeamertemplate{description item}[align left]
+\begin{description}
+\item[vector] Geometry (points/lines/polygons)\\not 1-dimension array
+\item[raster] Matrix (cells/pixels)
+\end{description}
+\end{column}
+\begin{column}{6cm}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{images/vector_raster.png}
+\end{center}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Vector}
+Often accompanied by tabular descriptive attributes
+\\-  Data type choice for discrete objects
+\begin{columns}
+\begin{column}{4cm}
+Lines example (right)
+..but could be:
+\begin{itemize}
+\item Points
+\item Lines (polylines)
+\item Polygons (areas)
+\end{itemize}
+\end{column}
+\begin{column}{6cm}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.3]{images/vector.png}
+\end{center}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Vector}
+Example (xy coordinates recorded at each vertex)
+\begin{columns}
+\begin{column}{5cm}
+%\lstset{tabsize=2,breaklines=true,numbers=left,basicstyle=footnotesize,xleftmargin=30pt}
+\lstset{language=[LaTeX]TeX,
+xleftmargin=30pt,
+basicstyle=\tiny,
+texcsstyle=*\bf\color{blue},
+numbers=left,
+tabsize=2,
+breaklines=true,
+keywordstyle=\color{darkgreen},
+commentstyle=\color{red},
+frame=leftline,
+backgroundcolor=\color{lightgrey},
+escapeinside=||
+}
+\lstinputlisting[language=python,]{lines.txt}
+\end{column}
+\begin{column}{5cm}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.25]{images/vector.png}
+\end{center}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Vector}
+\begin{columns}[t]
+\begin{column}{5cm}
+Binary
+\begin{itemize}
+\item SHP/SHX/DBF (Shapefiles)
+\begin{itemize}
+\item ArcGIS (ESRI)
+\end{itemize}
+\item TAB
+\begin{itemize}
+\item  MapInfo
+\end{itemize}
+\item DWG
+\begin{itemize}
+\item  AutoCAD
+\end{itemize}
+\end{itemize}
+Database
+\begin{itemize}
+\item  ArcGIS Geodatabase
+\item  PostgreSQL/PostGIS
+\item  SQLite/Spatialite
+\end{itemize}
+\end{column}
+\begin{column}{5cm}
+Text (Ascii/Unicode)
+\begin{itemize}
+\item DXF
+\begin{itemize}
+\item  AutoCAD
+\end{itemize}
+\item KML
+\begin{itemize}
+\item Google Earth
+\end{itemize}
+\item OSM
+\begin{itemize}
+\item  Openstreetmap
+\end{itemize}
+\end{itemize}
+\bigskip
+Most likely your data is in the shapefiles format, but databases and text files that follow OGC's simple features standard are becoming more common.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Vector}
+Shapefiles - requires minimum 3 extensions (optional: prj,sbn,sbx,xml)
+\begin{itemize}
+\item SHP - shape/geometry
+\item DBF - attributes/table
+\item SHX - index to bind above two
+\end{itemize}
+\begin{figure}
+\includegraphics[scale=0.3]{images/shapefiles.png}
+\caption<1>{First Image}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Vector}
+KML (kind of like a database)
+\begin{columns}[t]
+\begin{column}{5cm}
+%\lstset{tabsize=2,breaklines=true,numbers=left,basicstyle=footnotesize,xleftmargin=30pt}
+\lstset{language=[LaTeX]TeX,
+xleftmargin=1pt,
+basicstyle={\ttfamily\srcsize},
+texcsstyle=*\bf\color{blue},
+numbers=left,
+tabsize=2,
+breaklines=true,
+keywordstyle=\color{darkgreen},
+commentstyle=\color{red},
+frame=leftline,
+backgroundcolor=\color{lightgrey},
+escapeinside=||
+}
+\lstinputlisting[language=python,]{images/KML_Samples1.kml}
+\end{column}
+\begin{column}{5cm}
+%\lstset{tabsize=2,breaklines=true,numbers=left,basicstyle=footnotesize,xleftmargin=30pt}
+\lstset{language=[LaTeX]TeX,
+xleftmargin=1pt,
+basicstyle={\ttfamily\srcsize},
+texcsstyle=*\bf\color{blue},
+numbers=left,
+tabsize=2,
+breaklines=true,
+keywordstyle=\color{darkgreen},
+commentstyle=\color{red},
+frame=leftline,
+backgroundcolor=\color{lightgrey},
+escapeinside=||
+}
+\lstinputlisting[language=python,]{images/KML_Samples2.kml}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Raster}
+Image, matrix
+\\ - Data type choice for continuous phenomena/conditions
+\\ - Simple data structure, easy to read and analyze
+\\ - Mostly binary but could be just a text..
+\begin{columns}
+\begin{column}{5cm}
+\begin{itemize}
+\item ESRI GRID
+\item IMG (Erdas Imagine)
+\item SID (MrSID)
+\item BMP (Bitmap)
+\item TIF
+\item JPG
+\item .. also in databases
+\end{itemize}
+\end{column}
+\begin{column}{5cm}
+\begin{figure}
+\includegraphics[scale=0.25]{images/raster.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial Data Types and Formats - Raster}
+Example (header with matrix)
+\\ - Header is NOT required (separate metadata or world file will do) but these XY-origins, cell size, projection info make the data "spatial"
+\begin{columns}
+\begin{column}{5cm}
+%\lstset{tabsize=2,breaklines=true,numbers=left,basicstyle=footnotesize,xleftmargin=30pt}
+\lstset{language=[LaTeX]TeX,
+xleftmargin=30pt,
+basicstyle=\tiny,
+texcsstyle=*\bf\color{blue},
+numbers=left,
+tabsize=2,
+breaklines=true,
+keywordstyle=\color{darkgreen},
+commentstyle=\color{red},
+frame=leftline,
+backgroundcolor=\color{lightgrey},
+escapeinside=||
+}
+\lstinputlisting[language=python,]{raster.txt}
+\end{column}
+\begin{column}{5cm}
+\begin{figure}
+\includegraphics[scale=0.25]{images/raster.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Coordinate Reference Systems/Map Projections}
+\begin{itemize}
+\item XY coordinates - unique attributes pertaining to spatial data
+\item Problem: there are many ways to set XY
+\begin{itemize}
+\item We need to know how XY was set to locate the 3-dimensional Earth objects on 2-dimensional space (map/graphics)
+\end{itemize}
+\item Key concepts:
+\begin{itemize}
+\item Datum - Earth's (shape) models
+\item Coordinate reference systems - location reference system
+\begin{itemize}
+\item Geographic (lon/lat)
+\item Or, planar/grid systems? (UTM, US State Plane, etc.)
+\end{itemize}
+\item Map Projections - cartographical devices (Mercator, Lambert, etc.)
+\end{itemize}
+\item Link:  \href{https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/OverviewCoordinateReferenceSystems.pdf}{excellent guide for R users}
+\item Link: 
+\href{https://r-forge.r-project.org/scm/viewvc.php/trunk/inst/proj/epsg?view=markup&revision=91&root=rgdal&diff_format=h&pathrev=93}{list of EPSG numbers \& proj4string}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Spatial analysis}
+Comprehensive and authoritative spatial analysis textbook:
+\href{http://www.spatialanalysisonline.com/}{http://www.spatialanalysisonline.com/}
+\\~\\
+Key concepts from the book:
+\setbeamertemplate{description item}[align left]
+\begin{description}
+\item[Vector-base] \hfill \\ 
+  \item "map overlay (combining two or more maps or map layers)" \\
+  \item "simple buffering (identifying regions of a map)", etc.
+\item[Raster-base] \hfill \\ 
+  \item "a range of actions applied to the grid cells of one or more maps (or images) often involving filtering and/or algebraic operations (map algebra)"
+\end{description}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spatial analysis}
+\setbeamertemplate{description item}[align left]
+\begin{description}
+  \item[Mapping/visualization] \hfill \\"I need to make a map."
+  \item[Overlay/zone statistics] \hfill \\"How many businesses will be affected by the zoning change?"  \hfill \\ "How much of wildfire area is contained?" \hfill \\"How often and what type of crimes occurred in each police district?"
+  \item[Adjacency/contiguity] \hfill \\"Tell me the names of adjacent cities and villages."
+  \item[Proximity] \hfill \\"I need to find resources near XXXXX."
+  \item[Distance] \hfill \\"How far is it between this and that?"
+\end{description}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Spatial analysis}
+\setbeamertemplate{description item}[align left]
+\begin{description}
+  \item[Geocoding (add XY)] \hfill \\"I have a list of addresses to geocode/locate.
+  \item[Travel/flow time] \hfill \\"How long does it take to get there from here by foot, car or public transportation?"
+  \item[Imagery] \hfill \\"Tell me what's on the ground based on the satellite image."
+  \item[Terrain/elevation] \hfill \\"Calculate slope or viewshed area."
+  \item[Interpolation] \hfill \\"Based on the nearby survey result, estimate the total snowfall for this location."
+\end{description}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{R}
+\begin{itemize}
+\item R is free
+\item R is a dialect of the S language
+\item R is based on 40-year old technology 
+\item R offers statistical analysis environment
+\item Learn R - Springer's UseR! series (PDF books from the library)
+\item IDE (integrated development environment) for R
+\begin{itemize}
+\item RGui (Windows/Mac default) - use this today
+\item R commander, RStudio, Revolution, Rattle, ..
+\end{itemize}
+\item R functionality is divided into a number of packages
+\begin{itemize}
+\item Our focus is on packages from CRAN's "Spatial" task view!
+\item \href{https://cran.r-project.org/web/views/}{https://cran.r-project.org/web/views/}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Spatial}
+\begin{itemize}
+\item \href{http://rspatial.r-forge.r-project.org/}{http://rspatial.r-forge.r-project.org/}
+\item Currently, 154 packages are listed under "Spatial" task view
+\begin{itemize}
+\item About 2 \% of all packages (my estimate as of 9/10/15)
+\end{itemize}
+\item R-SIG-Geo: email list
+\end{itemize}
+\begin{figure}
+\includegraphics[scale=0.2]{images/TaskViewSpatialxsmall.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Spatial}
+\begin{itemize}
+\item most "Spatial" packages depend on "sp" package
+\end{itemize}
+\begin{figure}
+\includegraphics[scale=0.2]{images/TaskViewSpatialcenter.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Spatial - sp}
+\begin{itemize}
+\item "sp" defines "spatial" data object classes (esp. for vector)
+\begin{itemize}
+\item Great advantage for doing spatial analysis in R - standardized access.
+\end{itemize}
+\item R objects
+\begin{itemize}
+\item data.frame,matrix,array,vector,list,variables(char/numeric/logical)
+\end{itemize}
+\item R-spatial objects are more complex
+\begin{itemize}
+\item Vector: Spatial\{Points:Lines:Polygons\}, Spatial\{Points:Lines:Polygons\}DataFrame
+\item  - composed of multiple slots
+\begin{itemize}
+\item geometry \{points:lines:polygons\} with coordinates
+\item bbox (extent/bounding box information)
+\item proj4string (projection/coordinate system information)
+\item data
+\end{itemize}
+\item Raster - often extended with raster package
+\begin{itemize}
+\item Grid (similar structure as vector sp objects)
+\item Rasterlayer, RasterStack, RasterBrick (with raster package)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Spatial - rgdal, rgeos}
+rgdal package - R interface to \href{http://www.gdal.org/}{GDAL}
+\begin{itemize}
+\item Requires GDAL (must-have geospatial library)
+\item Full GDAL installation includes handy utilities.
+\item Three components
+\begin{itemize}
+\item GDAL: raster data handling
+\item OGR : vector data handling
+\item PROJ4 : spatial/coordinate reference system
+\end{itemize}
+\end{itemize}
+\bigskip
+rgeos package - R interface to \href{https://trac.osgeo.org/geos/}{GEOS}
+\begin{itemize}
+\item Requires GEOS, a spatial (vector) analysis library
+\end{itemize}
+\bigskip
+Please consult this excellent guide for installation advice
+\begin{itemize}
+\item \href{http://geoscripting-wur.github.io/system\_setup/}{http://geoscripting-wur.github.io/system\_setup/}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Spatial - reading data}
+Vector
+\begin{itemize}
+\item rgdal - check with ogrDrivers()
+\begin{itemize}
+\item readOGR("roads.shp","roads")
+\end{itemize}
+\item maptools - shapefiles only, don't read PRJ
+\begin{itemize}
+\item readShapeSpatial("roads")
+\end{itemize}
+\end{itemize}
+Raster
+\begin{itemize}
+\item rgdal - check with gdalDrivers()
+\begin{itemize}
+\item readGDAL("elevation.asc") --- SpatialGridDataFrame
+\item To convert to "rasterLayer", simply pass it to raster()
+\end{itemize}
+\item raster - GeoTIFF, IMG, GRD, BIL, BSQ, ArcASCII, SAGA, IDRISI
+\begin{itemize}
+\item raster("elevation.asc") --- rasterLayer (matrix/2-dimensions)
+\end{itemize}
+\item Not "spatial" : tiff (readTIFF), jpeg (readJPEG), png (readPNG) 
+\begin{itemize}
+\item Like Matlab/other stats software, these return matrix/array (2-/3+- dimensions)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Spatial - writing data}
+Vector
+\begin{itemize}
+\item rgdal - check with ogrDrivers()
+\begin{itemize}
+\item writeOGR(roads, "roads2.shp","roads2", driver="ESRI Shapefile")
+\end{itemize}
+\item maptools - shapefiles only, don't read PRJ
+\begin{itemize}
+\item writeSpatialShape(roads, "roads2.shp")
+\end{itemize}
+\end{itemize}
+Raster
+\begin{itemize}
+\item rgdal - check with gdalDrivers()
+\begin{itemize}
+\item writeGDAL(elevation, "outputfile", drivername="GTiff")
+\end{itemize}
+\item raster - RD, BIL, BSQ, ArcASCII, SAGA, IDRISI
+\begin{itemize}
+\item writeRaster(elevation, "output", format="GTiff")
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}
